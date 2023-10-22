@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-get_page that takes two integer arguments page withdefault value 1 and page_size with default value 10.
+get_page that takes two integer arguments page withdefault
+value 1 and page_size with default value 10.
 """
 import csv
 import math
 from typing import List, Tuple
 
 
-
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
-     return a tuple of size two containing a start index
-     and an end index corresponding to the range of indexes
+        return a tuple of size two containing a start index
+        and an end index corresponding to the range of indexes
     """
     start_index = 0
     end_index = 0
-    
+
     for i in range(page):
         start_index = end_index
         end_index += page_size
@@ -61,10 +61,9 @@ class Server:
         """
         assert(isinstance(page, int) and isinstance(page_size, int))
         assert(page > 0 and page_size > 0)
-        
+
         dataset = self.dataset()
         start_end = index_range(page, page_size)
         if start_end:
             return dataset[start_end[0]:start_end[1]]
         return []
-        
