@@ -17,7 +17,7 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
     start_index = 0
     end_index = 0
-   
+
     for i in range(page):
         start_index = end_index
         end_index += page_size
