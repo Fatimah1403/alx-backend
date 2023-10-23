@@ -5,8 +5,8 @@ value 1 and page_size with default value 10.
 """
 import csv
 import math
-from typing import List, Tuple, Dict
-index_range = import('0-simple_helper_function').index_range
+from typing import List, Tuple
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
@@ -46,8 +46,8 @@ class Server:
             If the input arguments are out of range for the dataset,
             an empty list should be returned.
         """
-        assert(isinstance(page, int) and isinstance(page_size, int))
-        assert(page > 0 and page_size > 0)
+        assert (isinstance(page, int) and isinstance(page_size, int))
+        assert (page > 0 and page_size > 0)
 
         dataset = self.dataset()
         start_end = index_range(page, page_size)
