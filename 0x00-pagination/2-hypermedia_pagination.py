@@ -6,20 +6,7 @@ value 1 and page_size with default value 10.
 import csv
 import math
 from typing import List, Tuple, Dict
-
-
-def index_range(page: int, page_size: int) -> Tuple[int, int]:
-    """
-        return a tuple of size two containing a start index
-        and an end index corresponding to the range of indexes
-    """
-    start_index = 0
-    end_index = 0
-
-    for i in range(page):
-        start_index = end_index
-        end_index += page_size
-    return (start_index, end_index)
+index_range = import('0-simple_helper_function').index_range
 
 
 class Server:
