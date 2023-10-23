@@ -55,26 +55,23 @@ class Server:
             return dataset[start_end[0]:start_end[1]]
         return []
 
-
-def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
-    """
-    Returns a dict of:
-    page_size: the length of the returned dataset page
-    page: the current page number
-    data: the dataset page (equivalent to return from previous task)
-    next_page: number of the next page, None if no next page
-    prev_page: number of the previous page, None if no previous page
-    total_pages: the total number of pages in the dataset as an integer
-    """
-    total_pages = len(self.dataset())
-    dataset_rec = self.get_page(page, page_size)
-
-    data_info = {
-        "page": page,
-        "page_size": len(dataset_rec),
-        "data": dataset_rec,
-        "next_page": page + 1 if (page + 1) <= total_pages else None,
-        "prev_page": page - 1 if (page - 1) > 1 else None,
-        "total_pages": total_pages
-    }
-    return data_info
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
+        """
+        Returns a page of the dataset.
+        Args:
+            page (int): The page number.
+            page_size (int): The page size.
+        Returns:
+            List[List]: The page of the dataset.
+        """
+        total_pages = len(self.dataset()) // page_size + 1
+        data = self.get_page(page, page_size)
+        info = {
+            "page": page,
+            "page_size": page_size if page_size <= len(data) else len(data),
+            "total_pages": total_pages,
+            "data": data,
+            "prev_page": page - 1 if page > 1 else None,
+            "next_page": page + 1 if page + 1 <= total_pages else None
+        }
+        return info
