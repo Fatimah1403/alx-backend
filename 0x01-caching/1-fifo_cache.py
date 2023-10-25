@@ -18,16 +18,14 @@ class FIFOCache(BaseCaching):
         super().__init__()
 
     def put(self, key, item):
-        """
-        Add item to the cache using FIFO
-        """
-        last_item = 0
-        if key or item is None:
-            pass
-        if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+        """ Add an item in the cache """
+        if key and item:
+            self.cache_data[key] = item
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
             self.cache_data.pop(self.last_item)
-            print("DISCORD: {}".format(last_item))
-        self.cache_data[key] = item
+            print('DISCARD:', self.last_item)
+        if key:
+            self.last_item = key
 
     def get(self, key):
         """
