@@ -13,18 +13,18 @@ class LIFOCache(BaseCaching):
 
     def put(self, key, item):
         """ Add an item in the cache using LFU"""
-        length_of = len(self.cache_data)
-
         if key and item:
-            length_of[key] = item
+            # check if the number of item is higher than MAX_ITEMS
+            self.cache_data[key] = item
             self.cache_data.move_to_end(key)
+            if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+                # discard the first item put in cache
+                first_key, _ = self.cache_data.popitem(last=False)
+                print("DISCARD: {}".format(first_key))
 
-        if length_of > BaseCaching.MAX_ITEMS:
-            lru_key, _ = self.cache_data.popitem(last=False)
-            print("DISCARD: {}".format(lru_key))
-
-    def get(self, key):
-        """ Get an item by key """
+    def get(self, key):  # sourcery skip: assign-if-exp, reintroduce-else
+        """ Get an item by key
+        """
         if key in self.cache_data:
             self.cache_data.move_to_end(key)
             return self.cache_data.get(key)
