@@ -1,56 +1,47 @@
 # !/usr/bin/env python3
 """ BaseCaching module using FIFO algorithm """
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 
 
-BaseCaching = __import__('base_caching').BaseCaching
+BaseCaching = __import__("base_caching").BaseCaching
 
 
-# Create a class LIFOCache that inherits from BaseCaching system:
+# Create a class LFUCache that inherits from BaseCaching system:
 
-# You must use self.cache_data - dictionary from the base BaseCaching
-# You can overload def __init__(self)
 # def put(self, key, item):
-# assign to the dictionary self.cache_data the item value for the key.
-# If key or item is None, this method should not do anything.
-# If items in self.cache_data is higher that BaseCaching.MAX_ITEMS:
-# you must discard the least recently used item (LRU algorithm)
-# print DISCARD: with the key discarded and following by a new line
-# def get(self, key):
-# Must return the value in self.cache_data linked to key.
-# If key is None return None.
+# you must discard the least frequency used item (LFU algorithm)
+# if you find more than 1 item to discard,
+# -  you must use the LRU algorithm to discard only the least recently used
+# you must print DISCARD: with the key discarded and following by a new line
 
 
-class MRUCache(BaseCaching):
-    """ Caching System """
+class LFUCache(BaseCaching):
+    """Caching System"""
 
     def __init__(self):
-        """ Initiliaze
-        """
+        """Initiliaze"""
         super().__init__()
         self.cache_data = OrderedDict(self.cache_data)
         self.freq = {}
 
     def put(self, key, item):
-        """
-        Adding item to the cache
-        """
+        """Add an item in the cache"""
         if key and item:
             if key in self.cache_data:
+                # Update frequency for existing key
                 self.frequency_update(self, key)
                 self.cache_data[key] = item
                 return
-            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                # getting the lowest frequency frpm frequency dict
-                discarded_items = [
+            if len(self.cache_data) >= self.MAX_ITEMS:
+                # get the lowest freqeuncy from the frequency dict
+                items_to_discard = [
                     (self.freq[key], key) for key in self.freq.keys()
                 ]
-
-                deleted_items = sorted(discarded_items)[0][1]
-                del self.cache_data[deleted_items]
-                del self.freq[deleted_items]
-                print("DISCARD: {}".format(deleted_items))
-                # add new items
+                del_key = sorted(items_to_discard)[0][1]
+                del self.cache_data[del_key]
+                del self.freq[del_key]
+                print("DISCARD: {}".format(del_key))
+                # add new item
                 self.cache_data[key] = item
                 self.freq[key] = 1
             self.cache_data[key] = item
@@ -66,5 +57,5 @@ class MRUCache(BaseCaching):
 
     @staticmethod
     def frequency_update(self, key):
-        """ updating the frequency of the dict"""
+        """Update the frequency dict"""
         self.freq[key] += 1
