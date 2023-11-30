@@ -1,37 +1,26 @@
-/*eslint-disable no-console */
-import redis from "redis";
+#!/usr/bin/yarn dev
+import { createClient, print } from 'redis';
 
-// create a redis client
-const client = redis.createClient();
+const client = createClient();
 
-client.on("connect", () => {
-    console.log("Redis client connected to the server");
+client.on('error', (err) => {
+  console.log('Redis client not connected to the server:', err.toString());
 });
 
-client.on("error", (error) => {
-    console.log(`Redis client not connected to the server: ${error}`);
+client.on('connect', () => {
+  console.log('Redis client connected to the server');
 });
 
-function setNewSchool(schoolName, value) {
-    client.set(schoolName, value, (err, result) => {
-        if (err) {
-            console.error(err);
-        }
-        console.log(`Reply: ${result}`)
-    });
-}
-function displaySchoolValue(schoolName) {
-    client.get(schoolName, (err, result) => {
-        if (err) {
-            console.error(err);
-        }
-        console.log(result)
+const setNewSchool = (schoolName, value) => {
+  client.SET(schoolName, value, print);
+};
 
+const displaySchoolValue = (schoolName) => {
+  client.GET(schoolName, (_err, reply) => {
+    console.log(reply);
+  });
+};
 
-    });
-}
 displaySchoolValue('Holberton');
 setNewSchool('HolbertonSanFrancisco', '100');
 displaySchoolValue('HolbertonSanFrancisco');
-
-

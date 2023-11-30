@@ -1,38 +1,28 @@
-/*eslint-disable no-console */
-import redis from "redis";
-const util = require("utill");
+#!/usr/bin/yarn dev
+import { promisify } from 'util';
+import { createClient, print } from 'redis';
 
-// create a redis client
-const client = redis.createClient();
+const client = createClient();
 
-client.on("connect", () => {
-    console.log("Redis client connected to the server");
+client.on('error', (err) => {
+  console.log('Redis client not connected to the server:', err.toString());
 });
 
-client.on("error", (error) => {
-    console.log(`Redis client not connected to the server: ${error}`);
+const setNewSchool = (schoolName, value) => {
+  client.SET(schoolName, value, print);
+};
+
+const displaySchoolValue = async (schoolName) => {
+  console.log(await promisify(client.GET).bind(client)(schoolName));
+};
+
+async function main() {
+  await displaySchoolValue('Holberton');
+  setNewSchool('HolbertonSanFrancisco', '100');
+  await displaySchoolValue('HolbertonSanFrancisco');
+}
+
+client.on('connect', async () => {
+  console.log('Redis client connected to the server');
+  await main();
 });
-
-client.getAsync = util.promisify(client.get).bind(client)
-client.setAsync = util.promisify(client.set).bind(client)
-
-
-async function setNewSchool(schoolName, value) {
-   try {
-    const result = await client.setAsync(schoolName, value);
-    console.log(`Reply: ${reply}`);
-   } catch (error) {
-     console.error(err);
-   }
-}
-async function displaySchoolValue(schoolName) {
-   try {
-    const reply = await client.getAsync(schoolName);
-    console.log(reply);
-   } catch (err) {
-    console.error(err)
-   }
-}
-displaySchoolValue('Holberton');
-setNewSchool('HolbertonSanFrancisco', '100');
-displaySchoolValue('HolbertonSanFrancisco');
