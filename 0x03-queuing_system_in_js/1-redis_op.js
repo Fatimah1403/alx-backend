@@ -15,15 +15,19 @@ client.on("error", (error) => {
 function setNewSchool(schoolName, value) {
     client.set(schoolName, value, (err, result) => {
         if (err) {
-            console.log(`Result: ${result}`);
+            console.error(err);
         }
+        console.log(`Reply: ${result}`)
     });
 }
 function displaySchoolValue(schoolName) {
     client.get(schoolName, (err, result) => {
         if (err) {
-            console.log(`Result: ${result}`);
+            console.error(err);
         }
+        console.log(result)
+
+
     });
 }
 displaySchoolValue('Holberton');
